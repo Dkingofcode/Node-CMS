@@ -1,1 +1,25 @@
 <h1>posts</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Allow Comments</th>
+            
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#each post}}
+        <tr>
+            <td>ID</td>
+            <td>Title</td>
+            <td>Status</td>
+            <td>Allow Comments</td>
+        </tr>
+    {{/end}}
+    
+    </tbody>
+</table>

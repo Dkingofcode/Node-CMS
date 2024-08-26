@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-router.all('/*', (req, res, next) => {
-     req.app.locals.layout = 'admin';
-     next();
-}); 
+
 
 router.get('/', (req, res) => {
+    Post.find({});
     res.send('IT WORKS');
 });
 
@@ -32,11 +30,11 @@ router.post('/create', (req, res) => {
     });
 
     newPost.save().then(savedPost => {
+        console.log(savedPost);
         res.redirect('/admin/posts');
-    })
-
-    
-
+    }).catch(error => {
+         console.log(error);
+    });
 
 });
 
