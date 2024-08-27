@@ -7,19 +7,25 @@
             <th>Title</th>
             <th>Status</th>
             <th>Allow Comments</th>
-            
         </tr>
     </thead>
 
     <tbody>
-        {{#each post}}
+        {{#each posts}}
         <tr>
-            <td>ID</td>
-            <td>Title</td>
-            <td>Status</td>
-            <td>Allow Comments</td>
+            <td>{{id}}</td>
+            <td>{{title}}</td>
+            <td>{{status}}</td>
+            <td>{{allowComments}}</td>
+            <td><a href="/admin/posts/edit/{{id}}" class="btn btn-info">Edit</a></td>
+            <td>
+                <form action="/admin/posts/{{id}}?_method=DELETE" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        
         </tr>
-    {{/end}}
     
+         {{/each}}
     </tbody>
 </table>

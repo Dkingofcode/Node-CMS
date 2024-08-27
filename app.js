@@ -4,10 +4,19 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override'); 
-const handlebars= require('handlebars');
+const Handlebars= require('handlebars');
+const bodyParser = require('body-parser');
+
 
 const { allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 
+// Body Parser
+app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.json());
+
+
+// Method Override
+app.use(methodOverride('_method'));
 
 mongoose.connect('mongodb://localhost:27017/cms', {
     useNewUrlParser: true,
@@ -19,10 +28,11 @@ mongoose.connect('mongodb://localhost:27017/cms', {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-//  Set  View Engine
+//  Set View Engine
 
-app.engine('handlebars', exphbs.engine({handlebars: allowInsecurePrototypeAccess(handlebars),  defaultLayout: 'Home' }));
+app.engine('handlebars', exphbs.engine({handlebars: allowInsecurePrototypeAccess(Handlebars), defaultLayout: 'Home' }));
 app.set('view engine', 'handlebars');
+
 
 //  Load Routes
 

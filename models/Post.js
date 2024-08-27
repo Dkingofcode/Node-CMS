@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-   
+    
     user: {
-
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
 
     title: {
@@ -20,7 +21,8 @@ const PostSchema = new Schema({
     
     allowComments:{
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
 
     body:{
