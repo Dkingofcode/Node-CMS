@@ -3,7 +3,12 @@
 <form action="/admin/posts/create" method="post">
     <div class="form-group">
         <label for="title">Title</label>
-        <input name="title" type="text" class="form-control" id="title" placeholder="Enter your title"  />
+        <input name="title" type="text" class="form-control" id="title" placeholder="Enter your title" required />
+    </div>
+
+      <div class="form-group">
+        <label for="title">File Upload</label>
+        <input name="file" type="file" class="form-control" id="title" placeholder="Enter your title"  />
     </div>
 
     <div class="form-group">
@@ -17,14 +22,14 @@
 
      <div class="form-check">
         <label for="allowComments" class="form-check-label">
-        <input name="allowComments" type="checkbox" class="form-check-input" id="allowComments">
+        <input name="allowComments" type="checkbox" class="form-check-input" id="allowComments" >
         Allow Comments
         </label>
      </div>  
 
      <div class="form-group">
         <label for="body">Body</label>
-        <textarea name="body" cols="30" rows="10" class="form-control" id="body" placeholder="write here"></textarea>
+        <textarea required name="body" cols="30" rows="10" class="form-control" id="body" placeholder="write here"></textarea>
      </div>
 
      

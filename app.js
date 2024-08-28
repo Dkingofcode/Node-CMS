@@ -7,6 +7,9 @@ const methodOverride = require('method-override');
 const Handlebars= require('handlebars');
 const bodyParser = require('body-parser');
 const Upload = require('express-fileupload');
+const flash = require('connect-flash');
+const session = require('express-session');
+
 
 const { allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 
@@ -14,12 +17,31 @@ const { allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acc
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
+// Flash messages
+app.use(flash());
+
 // Upload middleware
- 
 app.use(Upload());
 
 // Method Override
 app.use(methodOverride('_method'));
+
+// apply sessions
+app.use(session({
+    secret: 'password',
+    resave: true,
+    saveUninitialized: true,
+}));
+
+app.use(flash());
+
+// local Variables using middleware
+app.use((req, res, next) => {
+    res.locals.success_message = req.flash('success_message');
+    next();
+});
+
+
 
 mongoose.connect('mongodb://localhost:27017/cms', {
     useNewUrlParser: true,

@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../../models/Post')
-const select = require('../../helpers/handlebars-helpers');
+//const select = require('../../helpers/handlebars-helpers');
+const { isEmpty } = require('../../helpers/upload-helper');
+//const flash = require('connect-flash');
+
+
+
 
 
 router.all('/posts/*', (req, res, next) => {
@@ -20,31 +25,74 @@ router.get('/create', (req, res) => {
    res.render('admin/posts/create');
 });
 
+
+
 router.post('/create', (req, res) => {
-    console.log(req.body);
+ let errors = [];
 
-     let allowComments = true;
+ if(!req.body.title){
+    errors.push({message: 'please add a title'});
+ }
+ 
+ if(!req.body.status){
+    errors.push({message: 'please add a title'});
+ }
 
-     if(req.body.allowComments){
-        allowComments = true;
-     }else {
-        allowComments = false;
-     }
+ if(!req.body.body){
+    errors.push({message: 'please add a description'})
+ }
 
-    const newPost = new Post({
-        title: req.body.title,
-        status: req.body.status,
-        allowComments: req.body.allowComments ? true : false,
-        body: req.body.body
+ if(errors.length > 0){
+    res.render('admin/posts/create', {
+        errors: errors
     });
+ } else {
 
-    newPost.save().then(savedPost => {
-        console.log(savedPost);
-        res.redirect('/admin/posts');
-    }).catch(error => {
-         console.log(error);
-    });
+    let filename = '';
 
+    if(!isEmpty(req.files)){
+       let file = req.files.file;
+        filename = Date.now() + '-' + file.name;
+       
+       let dirUploads = './public/uploads/';
+   
+       file.mv(dirUploads + filename, (err) => {
+           if(err) throw err;
+       });
+   
+       console.log('is not empty');
+       }else{
+           console.log('Is Empty');
+       }
+       
+           
+   
+        let allowComments = true;
+   
+        if(req.body.allowComments){
+           allowComments = true;
+        }else {
+           allowComments = false;
+        }
+   
+       const newPost = new Post({
+           title: req.body.title,
+           status: req.body.status,
+           allowComments: req.body.allowComments ? true : false,
+           body: req.body.body,
+           file: filename
+       });
+   
+       newPost.save().then(savedPost => {
+           console.log(savedPost);
+           res.redirect('/admin/posts');
+       }).catch(error => {
+            console.log(error);
+       });   
+
+ }
+ 
+    
 });
 
 // router.get('/posts/edit', (req, res) => {
@@ -88,7 +136,16 @@ router.put('/edit/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     Post.findByIdAndDelete({ _id: req.params.id}).then(result => {
-        res.redirect('/admin/posts');
+      
+        fs.unlink(uploadDir + result.file, (err) => {
+              result.deleteOne();
+
+              req.flash('success_message', 'Post was successfully deleted');
+              res.redirect('/admin/posts');
+              console.log(err);  
+            
+        });      
+
 
     });
 });
