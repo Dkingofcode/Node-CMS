@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override'); 
 const Handlebars= require('handlebars');
 const bodyParser = require('body-parser');
-
+const Upload = require('express-fileupload');
 
 const { allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 
@@ -14,6 +14,9 @@ const { allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acc
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
+// Upload middleware
+ 
+app.use(Upload());
 
 // Method Override
 app.use(methodOverride('_method'));
@@ -29,8 +32,8 @@ mongoose.connect('mongodb://localhost:27017/cms', {
 app.use(express.static(path.join(__dirname, 'public')));
 
 //  Set View Engine
-
-app.engine('handlebars', exphbs.engine({handlebars: allowInsecurePrototypeAccess(Handlebars), defaultLayout: 'Home' }));
+const {select} = require('./helpers/handlebars-helpers');
+app.engine('handlebars', exphbs.engine({handlebars: allowInsecurePrototypeAccess(Handlebars), defaultLayout: 'Home', helpers: {select: select} }));
 app.set('view engine', 'handlebars');
 
 
