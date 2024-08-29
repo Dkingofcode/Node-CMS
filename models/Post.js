@@ -9,6 +9,11 @@ const PostSchema = new Schema({
         ref: 'User'
     },
 
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'categories'
+    },
+
     title: {
         type: String,
         required: true
@@ -32,7 +37,12 @@ const PostSchema = new Schema({
 
     file: {
         type: String,
-        
+
+    },
+
+    date: {
+        type: Date,
+        default: Date.now()
     }
 });
 

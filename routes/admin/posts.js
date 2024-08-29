@@ -26,6 +26,7 @@ router.get('/create', (req, res) => {
 });
 
 
+let filename = '';
 
 router.post('/create', (req, res) => {
  let errors = [];
@@ -48,7 +49,6 @@ router.post('/create', (req, res) => {
     });
  } else {
 
-    let filename = '';
 
     if(!isEmpty(req.files)){
        let file = req.files.file;
@@ -85,6 +85,7 @@ router.post('/create', (req, res) => {
    
        newPost.save().then(savedPost => {
            console.log(savedPost);
+           req.flash('success_message', 'Post was Created successfully');
            res.redirect('/admin/posts');
        }).catch(error => {
             console.log(error);
@@ -127,7 +128,26 @@ router.put('/edit/:id', (req, res) => {
       post.allowComments = allowComments;
       post.body = req.body.body;
     
-       post.save().then(updatedPost => {
+      if(!isEmpty(req.files)){
+        let file = req.files.file;
+         filename = Date.now() + '-' + file.name;
+         post.file = filename;
+         
+        let dirUploads = './public/uploads/';
+    
+        file.mv(dirUploads + filename, (err) => {
+            if(err) throw err;
+        });
+            
+        console.log('is not empty');
+    }else{
+        console.log('Is Empty');
+    }
+    
+    
+    
+    post.save().then(updatedPost => {
+           req.flash('success_message', 'Post was successfully deleted');
           res.redirect('/admin/posts');
        });
     

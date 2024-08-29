@@ -21,7 +21,7 @@ router.post('/generate-fake-posts', (req, res) => {
          post.allowComments = faker.datatype.boolean();
          post.body = faker.lorem.sentence();      
    
-          post.save().then(dummyData => {})
+          post.save().then(dummyData => { })
         
         
         }
