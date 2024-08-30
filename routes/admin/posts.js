@@ -1,17 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../../models/Post')
+const Category = require('../../models/Category');
 //const select = require('../../helpers/handlebars-helpers');
-const { isEmpty } = require('../../helpers/upload-helper');
+const { isEmpty, uploadDir } = require('../../helpers/upload-helper');
 //const flash = require('connect-flash');
+const fs = require('fs');
+const {userAuthenticated} = require('../../helpers/authentication');
 
 
 
 
+router.all('/*',  (req, res, next) => {
 
-router.all('/posts/*', (req, res, next) => {
     req.app.locals.layout = 'admin';
     next();
+
 }); 
 
 router.get('/', (req, res) => {
