@@ -32,6 +32,8 @@ router.get('/edit/:id', (req, res) => {
     });
 });
 
+
+
 router.post('/edit/:id', (req, res) => {
     Category.findOne({_id: req.params.id }).then(category => {
         

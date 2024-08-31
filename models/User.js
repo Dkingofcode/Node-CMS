@@ -29,6 +29,6 @@ UserSchema.methods.testSchema = function() {
 
 };
 
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model('users', UserSchema);
 
 

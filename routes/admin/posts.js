@@ -9,7 +9,7 @@ const fs = require('fs');
 const {userAuthenticated} = require('../../helpers/authentication');
 
 
-
+// Admin Posts Route
 
 router.all('/*',  (req, res, next) => {
 
@@ -18,6 +18,8 @@ router.all('/*',  (req, res, next) => {
 
 }); 
 
+// Get Admin Page
+
 router.get('/', (req, res) => {
     Post.find({}).populate('category').then(posts => {
         res.render('admin/posts', {posts: posts});
@@ -25,12 +27,28 @@ router.get('/', (req, res) => {
    // res.send('IT WORKS');
 });
 
+
+// Get SIngle User Posts
+
+router.get('/my-posts', (req, res) => {
+
+    Post.find({ _id: req.user.id }).populate('category').then(posts => {
+        res.render('admin/my-posts', {posts: posts});
+    });
+
+});
+
+
+// Go to Create Posts Page
+
 router.get('/create', (req, res) => {
    res.render('admin/posts/create');
 });
 
 
 let filename = '';
+
+// Create Posts
 
 router.post('/create', (req, res) => {
  let errors = [];
@@ -107,6 +125,10 @@ router.post('/create', (req, res) => {
 // });
 
 
+
+
+// Go to Update Posts Page
+
 router.get('/edit/:id', (req, res) => {
 
     Post.findOne({_id: req.params.id}).then(post => {
@@ -120,6 +142,8 @@ router.get('/edit/:id', (req, res) => {
 });
 
 
+// Update Posts
+
 router.put('/edit/:id', (req, res) => {
    // res.send('It works');
 
@@ -130,11 +154,14 @@ router.put('/edit/:id', (req, res) => {
         allowComments = false;
       }  
 
+      post.user = req.user.id;
       post.title = req.body.title;
       post.status = req.body.status;
       post.allowComments = allowComments;
       post.body = req.body.body;
-    
+      post.category = req.body.category;
+
+
       if(!isEmpty(req.files)){
         let file = req.files.file;
          filename = Date.now() + '-' + file.name;
@@ -155,22 +182,33 @@ router.put('/edit/:id', (req, res) => {
     
     post.save().then(updatedPost => {
            req.flash('success_message', 'Post was successfully deleted');
-          res.redirect('/admin/posts');
-       });
+           res.redirect('/admin/my-posts');
+        });
     
     });
 });
 
+
+// Delete Posts
+
 router.delete('/:id', (req, res) => {
-    Post.findByIdAndDelete({ _id: req.params.id}).then(result => {
+    Post.findById({ _id: req.params.id}).populate('comments').then(result => {
       
         fs.unlink(uploadDir + result.file, (err) => {
-              result.deleteOne();
-
-              req.flash('success_message', 'Post was successfully deleted');
-              res.redirect('/admin/posts');
-              console.log(err);  
+              
+              if(!result.comments.length < 1){
+                  result.comments.forEach(comment => {
+                    comment.deleteOne();
+                  });
+              }
             
+              result.deleteOne().then(postRemoved => {
+                req.flash('success_message', 'Post was successfully deleted');
+                res.redirect('/admin/my-posts');  
+              });
+
+              
+             // console.log(err);  
         });      
 
 

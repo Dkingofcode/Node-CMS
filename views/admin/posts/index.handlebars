@@ -27,9 +27,10 @@
             <td><img height="30" class="img-responsive" src="/uploads/{{file}}" alt="" /></td>
             <td>{{title}}</td>
             <td>{{status}}</td>
-            <td>{{category}}</td>
+            <td>{{category.name}}</td>
             <td>{{allowComments}}</td>
-            <td>{{GenerateTime date "MM dd YY"}}</td>
+            <td><a href="/post/{{id}}">View</a></td>
+            <td>{{GenerateTime date "MMMM Do YYYY"}}</td>
             <td><a href="/admin/posts/edit/{{id}}" class="btn btn-info">Edit</a></td>
             <td>
                 <form action="/admin/posts/{{id}}?_method=DELETE" method="post">

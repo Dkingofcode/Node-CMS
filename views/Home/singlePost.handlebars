@@ -9,7 +9,7 @@
           <!-- Author -->
           <p class="lead">
             by
-            <a href="#">Start Bootstrap</a>
+            <a href="#">{{post.user.firstName}}</a>
           </p>
 
           <hr>
@@ -20,7 +20,7 @@
           <hr>
 
           <!-- Preview Image -->
-          <img class="img-fluid rounded" src="/uploads/{{file}}" alt="">
+          <img class="img-fluid rounded" src="/uploads/{{post.file}}" alt="">
 
           <hr>
 
@@ -28,6 +28,10 @@
           <p class="lead">{{post.body}}</p>
 
           <hr>
+           
+           {{#if user}}
+
+           {{#if post.allowComments}}
 
           <!-- Comments Form -->
           <div class="card my-4">
@@ -36,20 +40,41 @@
               <form action="/admin/comments"  method="post">
                 <div class="form-group">
                   <textarea class="form-control" rows="3"></textarea>
+
+                  <input type="hidden" value="{{post.id}}" name="id" />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
             </div>
           </div>
 
+          {{else}}
+           
+           <h2>Comments not allowed for this</h2>
+                
+                <br>
+                <hr>
+
+          {{/if}}
+
+        {{else}}
+           <h2>You need to login to comment <a href="/login">login</a></h2>
+
+        {{/if}} 
+
+           {{#each post.comments }}
+
           <!-- Single Comment -->
           <div class="media mb-4">
             <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
             <div class="media-body">
-              <h5 class="mt-0">Commenter Name</h5>
+              <h5 class="mt-0">{{user.firstName}}</h5>
               Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
             </div>
           </div>
+
+         {{/each}}
+
 
           <!-- Comment with nested comments -->
           <div class="media mb-4">

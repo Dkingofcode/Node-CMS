@@ -11,9 +11,12 @@ router.all('/*', (req, res, next) => {
     next();
 }); 
 
+
 router.get('/', (req, res) => {
     res.render('admin/index');
 });
+
+
 
 router.post('/generate-fake-posts', (req, res) => {
     for(let i = 0; i < req.body.amount; i++){
@@ -30,6 +33,8 @@ router.post('/generate-fake-posts', (req, res) => {
         }
         res.redirect('/admin/posts');
 });
+
+
 
 // admin/Dashboard
 // router.get('/dashboard', (req, res) => {

@@ -41,7 +41,6 @@ router.get('/about', (req, res) => {
 router.get('/login',  (req, res) => {
     res.render('Home/login');
 
-
 });
 
 passport.use(new LocalStrategy({usernameField: email}, (email, password, done) => {
@@ -184,18 +183,16 @@ router.post('/register', (req, res) => {
 
 
         });
-
     }
-
-
 });
 
 // Get Single Post
 
 router.get('/post/:id', (req, res) => {
-    Post.findOne({_id: req.params.id }).then(post => {
+    Post.findOne({ _id: req.params.id }).populate({path: 'comments', populate: {path: 'user', model: 'users'}}).populate('user').then(post => {
+
         Category.find({}).then(categories => {
-            res.render('Home/singlePost', {singlePost: post, categories: categories});
+            res.render('Home/singlePost', {post: post, categories: categories});
         });        
     });
 });

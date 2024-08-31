@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
     
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: Schema.Types.ObjectId,
+        ref: 'users'
     },
 
     category: {
@@ -51,7 +51,7 @@ const PostSchema = new Schema({
     }]
 
 
-    
+
 });
 
 
